@@ -1,0 +1,11 @@
+{
+  "name": "campus-deals",
+  "version": "1.0.0",
+  "description": "Anonymous classifieds for students",
+  "scripts": {
+    "dev": "vite"
+  },
+  "devDependencies": {
+    "vite": "^4.0.0"
+  }
+}

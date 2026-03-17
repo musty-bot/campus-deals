@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Campus Deals – Buy & Sell on Campus</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script type="module" src="/js/config.js"></script>
+  <script type="module" src="/js/tracking.js"></script>
+  <script type="module" src="/js/main.js"></script>
+</head>
+<body>
+  <header class="header">
+    <div class="container header__inner">
+      <h1 class="logo">🎓 Campus Deals</h1>
+      <a href="/submit.html" class="btn btn--primary btn--sell">Sell Something</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="search-bar">
+      <input type="text" id="search" placeholder="Search for textbooks, furniture, electronics..." aria-label="Search">
+      <select id="category" aria-label="Category">
+        <option value="">All Categories</option>
+        <option value="books">Books</option>
+        <option value="electronics">Electronics</option>
+        <option value="furniture">Furniture</option>
+        <option value="clothing">Clothing</option>
+        <option value="other">Other</option>
+      </select>
+    </section>
+
+    <div id="loading" class="loading">Loading deals...</div>
+    <div id="deals-grid" class="deals-grid"></div>
+    <div id="no-results" class="no-results hidden">No deals found. Be the first to post!</div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 Campus Deals – Anonymous classifieds for students</p>
+    </div>
+  </footer>
+</body>
+</html>

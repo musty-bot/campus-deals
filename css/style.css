@@ -1,0 +1,520 @@
+/* ===== RESET & BASE ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #4361ee;
+  --primary-dark: #3a56d4;
+  --secondary: #ff9f1c;
+  --text: #2b2d42;
+  --text-light: #6c757d;
+  --background: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --success: #2a9d8f;
+  --danger: #e63946;
+  --warning: #e9c46a;
+  --shadow: 0 4px 12px rgba(0,0,0,0.05);
+  --shadow-hover: 0 8px 24px rgba(0,0,0,0.1);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --transition: all 0.2s ease;
+}
+
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--background);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  width: 100%;
+  padding: 0 16px;
+  margin: 0 auto;
+}
+
+/* ===== HEADER & FOOTER ===== */
+.header {
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(8px);
+  background: rgba(255,255,255,0.95);
+}
+
+.header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.footer {
+  background: var(--card-bg);
+  border-top: 1px solid var(--border);
+  padding: 24px 0;
+  margin-top: auto;
+  text-align: center;
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 20px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--transition);
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.btn--primary {
+  background: var(--primary);
+  color: white;
+  border: none;
+}
+
+.btn--primary:hover {
+  background: var(--primary-dark);
+}
+
+.btn--block {
+  width: 100%;
+}
+
+.btn--small {
+  min-height: 36px;
+  padding: 0 12px;
+  font-size: 0.9rem;
+}
+
+/* ===== FORMS ===== */
+.form {
+  background: var(--card-bg);
+  padding: 24px 16px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin: 24px 0;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-family: inherit;
+  background: white;
+  transition: var(--transition);
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+}
+
+.form-hint {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  margin-top: 4px;
+  display: block;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.image-preview {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.image-preview img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+/* ===== DEALS GRID (HOMEPAGE) ===== */
+.deals-grid {
+  display: grid;
+  gap: 16px;
+  margin: 24px 0;
+}
+
+/* Card */
+.deal-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+}
+
+.deal-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+.deal-card__image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  background: #f1f3f5;
+}
+
+.deal-card__content {
+  padding: 16px;
+}
+
+.deal-card__title {
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.deal-card__price {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--primary);
+  margin-bottom: 8px;
+}
+
+.deal-card__meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--text-light);
+}
+
+/* Search bar */
+.search-bar {
+  display: flex;
+  gap: 12px;
+  margin: 24px 0;
+  flex-wrap: wrap;
+}
+
+.search-bar input {
+  flex: 2;
+  min-width: 200px;
+}
+
+.search-bar select {
+  flex: 1;
+  min-width: 140px;
+}
+
+/* Loading & no results */
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-light);
+}
+
+.no-results {
+  text-align: center;
+  padding: 40px;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  color: var(--text-light);
+}
+
+.hidden {
+  display: none;
+}
+
+/* ===== POST DETAIL PAGE ===== */
+.post-detail {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 24px 16px;
+  margin: 24px 0;
+  box-shadow: var(--shadow);
+}
+
+.post-detail__images {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  scroll-snap-type: x mandatory;
+}
+
+.post-detail__images img {
+  width: 280px;
+  max-width: 80%;
+  height: auto;
+  border-radius: var(--radius-sm);
+  scroll-snap-align: start;
+  object-fit: cover;
+}
+
+.post-detail__title {
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+}
+
+.post-detail__price {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 16px;
+}
+
+.post-detail__meta {
+  display: flex;
+  gap: 16px;
+  color: var(--text-light);
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+}
+
+.post-detail__description {
+  margin: 24px 0;
+  line-height: 1.6;
+}
+
+.contact-section {
+  background: var(--background);
+  padding: 20px;
+  border-radius: var(--radius-sm);
+  margin-top: 24px;
+}
+
+.contact-info {
+  background: white;
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  word-break: break-all;
+}
+
+/* ===== ADMIN ===== */
+.admin-body {
+  background: var(--background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.login-card {
+  background: var(--card-bg);
+  padding: 32px 24px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  width: 100%;
+  max-width: 400px;
+}
+
+.admin-header {
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 0;
+}
+
+.admin-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.admin-header nav {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.admin-header a {
+  text-decoration: none;
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+}
+
+.admin-header a.active {
+  background: var(--primary);
+  color: white;
+}
+
+#logout-btn {
+  background: none;
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.stat-card {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.stat-card h3 {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  margin-bottom: 8px;
+}
+
+.stat-card p {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.chart-container {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin: 24px 0;
+}
+
+.top-posts {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.post-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.post-item:last-child {
+  border-bottom: none;
+}
+
+/* Pending posts */
+.pending-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (min-width: 640px) {
+  .pending-card {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.pending-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ===== UTILITIES ===== */
+.text-center { text-align: center; }
+.mt-4 { margin-top: 24px; }
+.mb-4 { margin-bottom: 24px; }
+
+/* ===== MEDIA QUERIES ===== */
+@media (min-width: 640px) {
+  .container {
+    max-width: 640px;
+  }
+  .deals-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 768px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1024px;
+  }
+  .deals-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1200px;
+  }
+  .deals-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

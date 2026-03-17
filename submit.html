@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post a Deal – Campus Deals</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script type="module" src="/js/config.js"></script>
+  <script type="module" src="/js/tracking.js"></script>
+  <script type="module" src="/js/submit.js"></script>
+</head>
+<body>
+  <header class="header">
+    <div class="container header__inner">
+      <a href="/" class="logo">🎓 Campus Deals</a>
+      <span class="header__title">Post an Ad</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <form id="post-form" class="form">
+      <div class="form-group">
+        <label for="title">Title *</label>
+        <input type="text" id="title" name="title" required maxlength="100" placeholder="e.g., Calculus textbook – like new">
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="4" placeholder="Describe the item, condition, reason for selling..."></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="price">Price ($) *</label>
+          <input type="number" id="price" name="price" step="0.01" min="0" required placeholder="0.00">
+        </div>
+        <div class="form-group">
+          <label for="category">Category *</label>
+          <select id="category" name="category" required>
+            <option value="">Select</option>
+            <option value="books">Books</option>
+            <option value="electronics">Electronics</option>
+            <option value="furniture">Furniture</option>
+            <option value="clothing">Clothing</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="contact">Contact info (email or phone) *</label>
+        <input type="text" id="contact" name="contact" required placeholder="Visible to buyers only">
+        <small class="form-hint">Will be shown when someone clicks "Show Contact"</small>
+      </div>
+
+      <div class="form-group">
+        <label for="images">Images (max 3) *</label>
+        <input type="file" id="images" name="images" accept="image/*" multiple required>
+        <small class="form-hint">First image will be the cover. Max 5MB each.</small>
+        <div id="image-preview" class="image-preview"></div>
+      </div>
+
+      <div class="form-group">
+        <button type="submit" class="btn btn--primary btn--block" id="submit-btn">Submit for Approval</button>
+      </div>
+      <div id="form-message" class="form-message"></div>
+    </form>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>All ads are reviewed before going live.</p>
+    </div>
+  </footer>
+</body>
+</html>

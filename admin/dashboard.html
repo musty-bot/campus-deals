@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard – Campus Deals</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script type="module" src="/js/config.js"></script>
+  <script type="module" src="/js/admin.js"></script>
+</head>
+<body>
+  <header class="admin-header">
+    <div class="container admin-header__inner">
+      <h2>Admin Dashboard</h2>
+      <nav>
+        <a href="/admin/dashboard.html" class="active">Dashboard</a>
+        <a href="/admin/pending.html">Pending</a>
+        <a href="/admin/manage.html">Manage Posts</a>
+        <button id="logout-btn">Logout</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="stats-grid">
+      <div class="stat-card">
+        <h3>Total Views (today)</h3>
+        <p id="views-today">-</p>
+      </div>
+      <div class="stat-card">
+        <h3>Active Listings</h3>
+        <p id="active-listings">-</p>
+      </div>
+      <div class="stat-card">
+        <h3>Pending Approval</h3>
+        <p id="pending-count">-</p>
+      </div>
+      <div class="stat-card">
+        <h3>Contact Clicks (today)</h3>
+        <p id="clicks-today">-</p>
+      </div>
+    </section>
+
+    <section class="chart-container">
+      <canvas id="views-chart"></canvas>
+    </section>
+
+    <section class="top-posts">
+      <h3>Top 10 Most Viewed Posts</h3>
+      <div id="top-posts-list"></div>
+    </section>
+  </main>
+</body>
+</html>

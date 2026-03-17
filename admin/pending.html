@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pending Approvals – Campus Deals</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script type="module" src="/js/config.js"></script>
+  <script type="module" src="/js/admin.js"></script>
+</head>
+<body>
+  <header class="admin-header">
+    <div class="container admin-header__inner">
+      <h2>Pending Approvals</h2>
+      <nav>
+        <a href="/admin/dashboard.html">Dashboard</a>
+        <a href="/admin/pending.html" class="active">Pending</a>
+        <a href="/admin/manage.html">Manage Posts</a>
+        <button id="logout-btn">Logout</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="pending-list" class="pending-list"></div>
+    <div id="loading" class="loading">Loading pending posts...</div>
+  </main>
+</body>
+</html>
