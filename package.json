@@ -4,6 +4,7 @@
   "description": "Anonymous classifieds for students",
   "scripts": {
     "dev": "vite",
+    "prebuild": "chmod +x node_modules/.bin/vite",
     "build": "vite build"
   },
   "devDependencies": {
