@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Anonymous classifieds for students",
   "scripts": {
-    "dev": "vite"
+    "dev": "vite",
     "build": "vite build"
   },
   "devDependencies": {
