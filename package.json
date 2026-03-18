@@ -4,6 +4,7 @@
   "description": "Anonymous classifieds for students",
   "scripts": {
     "dev": "vite"
+    "build": "vite build"
   },
   "devDependencies": {
     "vite": "^4.0.0"
