@@ -45,7 +45,7 @@ function renderPost(post) {
         ${imagesHtml}
       </div>
       <h1 class="post-detail__title">${escapeHtml(post.title)}</h1>
-      <div class="post-detail__price">$${Number(post.price).toFixed(2)}</div>
+      <div class="post-detail__price">ksh ${Number(post.price).toFixed(2)}</div>
       <div class="post-detail__meta">
         <span>${escapeHtml(post.category)}</span>
         <span>Posted ${timeAgo}</span>
