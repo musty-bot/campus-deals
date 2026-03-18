@@ -56,7 +56,7 @@ function renderPosts(posts) {
         <img src="${imageUrl}" alt="${escapeHtml(post.title)}" class="deal-card__image" loading="lazy">
         <div class="deal-card__content">
           <h3 class="deal-card__title">${escapeHtml(post.title)}</h3>
-          <div class="deal-card__price">$${Number(post.price).toFixed(2)}</div>
+          <div class="deal-card__price">ksh ${Number(post.price).toFixed(2)}</div>
           <div class="deal-card__meta">
             <span>${escapeHtml(post.category)}</span>
             <span>${timeAgo}</span>
