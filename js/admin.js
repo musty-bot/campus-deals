@@ -1,6 +1,6 @@
 import { supabase } from './config.js';
 
-// ========== LOGOUT (common) ==========
+// ========== LOGOUT ==========
 const logoutBtn = document.getElementById('logout-btn');
 if (logoutBtn) {
   logoutBtn.addEventListener('click', async () => {
@@ -168,13 +168,13 @@ async function loadPending() {
   container.innerHTML = pendingPosts.map(post => `
     <div class="pending-card" data-id="${post.id}">
       <div>
-        <strong>${escapeHtml(post.title)}</strong> - $${post.price}
+        <strong>${escapeHtml(post.title)}</strong> - KSh ${post.price}
         <br><small>${escapeHtml(post.category)} · ${escapeHtml(post.contact)}</small>
         <p>${escapeHtml(post.description?.substring(0,100))}...</p>
         ${post.image_urls?.map(url => `<img src="${url}" width="60" height="60" style="object-fit:cover;">`).join('')}
       </div>
       <div class="pending-actions">
-        <button class="btn btn--small btn--success" onclick="approvePost(${post.id})">Approve</button>
+        <button class="btn btn--small" onclick="approvePost(${post.id})">Approve</button>
         <button class="btn btn--small btn--danger" onclick="rejectPost(${post.id})">Reject</button>
       </div>
     </div>
@@ -244,7 +244,7 @@ async function loadManage() {
   container.innerHTML = posts.map(post => `
     <div class="post-item" data-id="${post.id}">
       <div>
-        <strong>${escapeHtml(post.title)}</strong> - $${post.price}
+        <strong>${escapeHtml(post.title)}</strong> - KSh ${post.price}
         <br><small>Status: ${post.status} | Category: ${escapeHtml(post.category)} | Contact: ${escapeHtml(post.contact)}</small>
         <p>${escapeHtml(post.description?.substring(0,100))}...</p>
         ${post.image_urls?.map(url => `<img src="${url}" width="60" height="60" style="object-fit:cover;">`).join('')}
@@ -278,7 +278,59 @@ window.editPost = async (id) => {
   else location.reload();
 };
 
-// Helper
+// ========== MAINTENANCE MODE ==========
+async function loadMaintenanceStatus() {
+  const toggle = document.getElementById('maintenance-toggle');
+  if (!toggle) return;
+  
+  const { data, error } = await supabase
+    .from('settings')
+    .select('value')
+    .eq('key', 'maintenance_mode')
+    .single();
+  
+  if (!error && data) {
+    toggle.checked = data.value;
+    const statusText = document.getElementById('maintenance-status-text');
+    if (statusText) {
+      statusText.textContent = data.value ? '🔧 Enabled (Visitors see maintenance page)' : '✅ Live (Site visible to visitors)';
+    }
+  }
+}
+
+async function toggleMaintenanceMode(checked) {
+  const { error } = await supabase
+    .from('settings')
+    .update({ value: checked, updated_at: new Date() })
+    .eq('key', 'maintenance_mode');
+  
+  if (error) {
+    console.error('Error updating maintenance mode:', error);
+    alert('Failed to update maintenance mode');
+    return false;
+  }
+  
+  const statusText = document.getElementById('maintenance-status-text');
+  if (statusText) {
+    statusText.textContent = checked ? '🔧 Enabled (Visitors see maintenance page)' : '✅ Live (Site visible to visitors)';
+  }
+  return true;
+}
+
+// Add event listener when DOM is ready
+if (document.getElementById('maintenance-toggle')) {
+  document.getElementById('maintenance-toggle').addEventListener('change', async (e) => {
+    const success = await toggleMaintenanceMode(e.target.checked);
+    if (!success) {
+      e.target.checked = !e.target.checked;
+    } else {
+      alert(e.target.checked ? 'Maintenance mode ENABLED. Visitors will see the maintenance page.' : 'Maintenance mode DISABLED. Site is live again.');
+    }
+  });
+  loadMaintenanceStatus();
+}
+
+// ========== HELPER FUNCTION ==========
 function escapeHtml(unsafe) {
   if (!unsafe) return '';
   return unsafe.replace(/[&<>"']/g, function(m) {

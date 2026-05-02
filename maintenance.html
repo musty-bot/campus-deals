@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Under Maintenance – Campus Deals</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .maintenance-container {
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .cartoon-card {
+      background: white;
+      border-radius: 60px 60px 40px 40px;
+      padding: 50px 30px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .cartoon-character {
+      font-size: 120px;
+      animation: bounce 1s ease-in-out infinite;
+      display: inline-block;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(10deg); }
+    }
+
+    .tools {
+      font-size: 50px;
+      margin: 20px 0;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .tools span {
+      animation: spin 2s linear infinite;
+      display: inline-block;
+    }
+
+    .tools span:nth-child(odd) {
+      animation-direction: reverse;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #333;
+      margin: 20px 0;
+    }
+
+    .message {
+      color: #666;
+      font-size: 1.2rem;
+      line-height: 1.6;
+      margin: 20px 0;
+    }
+
+    .progress-bar {
+      background: #e0e0e0;
+      border-radius: 30px;
+      height: 12px;
+      margin: 30px 0;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      width: 65%;
+      height: 100%;
+      border-radius: 30px;
+      animation: loading 2s ease-in-out infinite;
+    }
+
+    @keyframes loading {
+      0% { width: 30%; }
+      50% { width: 70%; }
+      100% { width: 30%; }
+    }
+
+    .alert-badge {
+      background: #ff4757;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      display: inline-block;
+      margin-bottom: 20px;
+      animation: pulse 1s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 20px;
+      color: #666;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .back-link:hover {
+      color: #667eea;
+    }
+
+    .contact-info {
+      margin-top: 20px;
+      font-size: 0.85rem;
+      color: #999;
+    }
+
+    @media (max-width: 480px) {
+      .cartoon-card {
+        padding: 30px 20px;
+      }
+      .cartoon-character {
+        font-size: 80px;
+      }
+      h1 {
+        font-size: 1.8rem;
+      }
+      .message {
+        font-size: 1rem;
+      }
+      .tools {
+        font-size: 35px;
+        gap: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="maintenance-container">
+    <div class="cartoon-card">
+      <div class="alert-badge">
+        🚧 WE'LL BE BACK SOON 🚧
+      </div>
+      
+      <div class="cartoon-character">
+        🛠️
+      </div>
+      
+      <h1>
+        <span>Under</span>
+        <span style="color: #764ba2;"> Maintenance</span>
+      </h1>
+      
+      <div class="message">
+        musty corporations is working hard to make the site even better!<br>
+        We're adding new features and fixing things up.
+      </div>
+
+      <div class="tools">
+        <span>🛠️</span>
+        <span>🔨</span>
+        <span>⚙️</span>
+        <span>🔩</span>
+        <span>🧹</span>
+        <span>🔧</span>
+      </div>
+
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+
+      <div class="message" style="font-size: 0.9rem;">
+        <strong>🕒 Estimated completion:</strong>in a few<br>
+        <strong>📧 Questions?</strong>hakuna swali uko nayo nikusumbua tu
+      </div>
+
+      <div class="contact-info">
+        Follow us for updates: 📘 🐦 📸
+      </div>
+
+      <a href="javascript:history.back()" class="back-link">
+        ← Go back
+      </a>
+    </div>
+  </div>
+</body>
+</html>
