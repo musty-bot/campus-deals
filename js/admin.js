@@ -128,7 +128,6 @@ if (window.location.pathname.includes('/pending')) {
 }
 
 async function loadPending() {
-  console.log('loadPending started');
   const loadingEl = document.getElementById('loading');
   const container = document.getElementById('pending-list');
   
@@ -142,7 +141,6 @@ async function loadPending() {
     window.location.href = '/admin/index.html';
     return;
   }
-  console.log('Session found, user:', session.user.email);
 
   const { data: pendingPosts, error } = await supabase
     .from('posts')
@@ -157,7 +155,6 @@ async function loadPending() {
     return;
   }
 
-  console.log('Pending posts received:', pendingPosts);
   if (loadingEl) loadingEl.style.display = 'none';
 
   if (!pendingPosts || pendingPosts.length === 0) {
@@ -207,7 +204,6 @@ if (window.location.pathname.includes('/manage')) {
 }
 
 async function loadManage() {
-  console.log('loadManage started');
   const loadingEl = document.getElementById('loading');
   const container = document.getElementById('manage-list');
 
@@ -317,7 +313,7 @@ async function toggleMaintenanceMode(checked) {
   return true;
 }
 
-// Add event listener when DOM is ready
+// Add maintenance toggle event listener
 if (document.getElementById('maintenance-toggle')) {
   document.getElementById('maintenance-toggle').addEventListener('change', async (e) => {
     const success = await toggleMaintenanceMode(e.target.checked);
@@ -328,6 +324,97 @@ if (document.getElementById('maintenance-toggle')) {
     }
   });
   loadMaintenanceStatus();
+}
+
+// ========== ANNOUNCEMENT MANAGEMENT ==========
+async function loadAnnouncementText() {
+  const textarea = document.getElementById('announcement-text');
+  if (!textarea) return;
+  
+  const { data, error } = await supabase
+    .from('settings')
+    .select('value_text')
+    .eq('key', 'announcement_text')
+    .single();
+  
+  if (!error && data && data.value_text) {
+    textarea.value = data.value_text;
+  }
+}
+
+async function saveAnnouncementText() {
+  const textarea = document.getElementById('announcement-text');
+  const statusSpan = document.getElementById('announcement-status');
+  
+  if (!textarea) return;
+  
+  const newText = textarea.value.trim();
+  
+  if (!newText) {
+    statusSpan.textContent = '❌ Please enter a message';
+    statusSpan.style.color = '#ffcccc';
+    setTimeout(() => {
+      statusSpan.textContent = '';
+    }, 3000);
+    return;
+  }
+  
+  statusSpan.textContent = 'Saving...';
+  statusSpan.style.color = 'white';
+  
+  const { error } = await supabase
+    .from('settings')
+    .update({ value_text: newText, updated_at: new Date() })
+    .eq('key', 'announcement_text');
+  
+  if (error) {
+    console.error('Error saving announcement:', error);
+    statusSpan.textContent = '❌ Save failed';
+    statusSpan.style.color = '#ffcccc';
+  } else {
+    statusSpan.textContent = '✅ Saved!';
+    statusSpan.style.color = '#ccffcc';
+    setTimeout(() => {
+      statusSpan.textContent = '';
+    }, 3000);
+  }
+}
+
+function previewAnnouncement() {
+  const textarea = document.getElementById('announcement-text');
+  const modal = document.getElementById('preview-modal');
+  const previewMessage = document.getElementById('preview-message');
+  
+  if (!textarea || !modal || !previewMessage) return;
+  
+  const message = textarea.value.trim();
+  previewMessage.textContent = message || 'Your announcement will appear here';
+  modal.style.display = 'flex';
+}
+
+function closePreviewModal() {
+  const modal = document.getElementById('preview-modal');
+  if (modal) {
+    modal.style.display = 'none';
+  }
+}
+
+// Add announcement event listeners
+if (document.getElementById('save-announcement-btn')) {
+  document.getElementById('save-announcement-btn').addEventListener('click', saveAnnouncementText);
+  document.getElementById('preview-announcement-btn').addEventListener('click', previewAnnouncement);
+  const closeModalBtn = document.getElementById('close-modal-btn');
+  if (closeModalBtn) {
+    closeModalBtn.addEventListener('click', closePreviewModal);
+  }
+  // Close modal when clicking outside
+  window.addEventListener('click', (e) => {
+    const modal = document.getElementById('preview-modal');
+    if (e.target === modal) {
+      closePreviewModal();
+    }
+  });
+  loadAnnouncementText();
 }
 
 // ========== HELPER FUNCTION ==========
