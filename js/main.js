@@ -6,41 +6,33 @@ const noResultsEl = document.getElementById('no-results')
 const searchInput = document.getElementById('search')
 const categorySelect = document.getElementById('category')
 
-let currentFilter = { search: '', category: '' }
+let allPosts = []
 
-async function loadApprovedPosts() {
+async function loadPosts() {
   loadingEl.classList.remove('hidden')
   dealsGrid.innerHTML = ''
   noResultsEl.classList.add('hidden')
 
   try {
-    let query = supabase
+    const { data, error } = await supabase
       .from('posts')
-      .select('id, title, price, category, image_urls, created_at')
+      .select('*')
       .eq('status', 'approved')
       .order('created_at', { ascending: false })
 
-    if (currentFilter.category) {
-      query = query.eq('category', currentFilter.category)
-    }
-
-    if (currentFilter.search) {
-      query = query.ilike('title', `%${currentFilter.search}%`)
-    }
-
-    const { data, error } = await query
-
     if (error) throw error
 
-    if (!data || data.length === 0) {
+    allPosts = data || []
+
+    if (allPosts.length === 0) {
       noResultsEl.classList.remove('hidden')
       return
     }
 
-    renderPosts(data)
+    renderPosts(allPosts)
   } catch (err) {
-    console.error('Error loading posts:', err)
-    dealsGrid.innerHTML = '<p class="error">Failed to load deals. Please refresh.</p>'
+    console.error('Error:', err)
+    dealsGrid.innerHTML = '<p style="color:red;">Failed to load deals. Please refresh.</p>'
   } finally {
     loadingEl.classList.add('hidden')
   }
@@ -48,18 +40,17 @@ async function loadApprovedPosts() {
 
 function renderPosts(posts) {
   dealsGrid.innerHTML = posts.map(post => {
-    // Data URI fallback for placeholder image
     const imageUrl = post.image_urls?.[0] || 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'400\' viewBox=\'0 0 400 400\'%3E%3Crect width=\'400\' height=\'400\' fill=\'%23cccccc\'/%3E%3Ctext x=\'100\' y=\'200\' font-family=\'Arial\' font-size=\'30\' fill=\'%23333\'%3ENo Image%3C/text%3E%3C/svg%3E'
-    const timeAgo = timeSince(new Date(post.created_at))
+    
     return `
-      <a href="/post.html?id=${post.id}" class="deal-card">
-        <img src="${imageUrl}" alt="${escapeHtml(post.title)}" class="deal-card__image" loading="lazy">
+      <a href="/post.html?id=${post.id}" class="deal-card" style="text-decoration:none; color:inherit;">
+        <img src="${imageUrl}" alt="${post.title}" class="deal-card__image">
         <div class="deal-card__content">
           <h3 class="deal-card__title">${escapeHtml(post.title)}</h3>
-          <div class="deal-card__price">ksh ${Number(post.price).toFixed(2)}</div>
+          <div class="deal-card__price">KSh ${Number(post.price).toFixed(2)}</div>
           <div class="deal-card__meta">
             <span>${escapeHtml(post.category)}</span>
-            <span>${timeAgo}</span>
+            <span>${timeAgo(post.created_at)}</span>
           </div>
         </div>
       </a>
@@ -67,43 +58,48 @@ function renderPosts(posts) {
   }).join('')
 }
 
-function escapeHtml(unsafe) {
-  return unsafe.replace(/[&<>"']/g, function(m) {
-    if(m === '&') return '&amp;'
-    if(m === '<') return '&lt;'
-    if(m === '>') return '&gt;'
-    if(m === '"') return '&quot;'
-    if(m === "'") return '&#039;'
+function escapeHtml(text) {
+  if (!text) return ''
+  return text.replace(/[&<>]/g, function(m) {
+    if (m === '&') return '&amp;'
+    if (m === '<') return '&lt;'
+    if (m === '>') return '&gt;'
   })
 }
 
-function timeSince(date) {
-  const seconds = Math.floor((new Date() - date) / 1000)
-  let interval = seconds / 31536000
-  if (interval > 1) return Math.floor(interval) + 'y ago'
-  interval = seconds / 2592000
-  if (interval > 1) return Math.floor(interval) + 'mo ago'
-  interval = seconds / 86400
-  if (interval > 1) return Math.floor(interval) + 'd ago'
-  interval = seconds / 3600
-  if (interval > 1) return Math.floor(interval) + 'h ago'
-  interval = seconds / 60
-  if (interval > 1) return Math.floor(interval) + 'm ago'
-  return 'just now'
+function timeAgo(date) {
+  const seconds = Math.floor((new Date() - new Date(date)) / 1000)
+  if (seconds < 60) return 'just now'
+  const minutes = Math.floor(seconds / 60)
+  if (minutes < 60) return minutes + 'm ago'
+  const hours = Math.floor(minutes / 60)
+  if (hours < 24) return hours + 'h ago'
+  const days = Math.floor(hours / 24)
+  return days + 'd ago'
 }
 
-let debounceTimer
-searchInput.addEventListener('input', () => {
-  clearTimeout(debounceTimer)
-  debounceTimer = setTimeout(() => {
-    currentFilter.search = searchInput.value.trim()
-    loadApprovedPosts()
-  }, 300)
-})
+function filterPosts() {
+  const searchTerm = searchInput.value.toLowerCase()
+  const category = categorySelect.value
+  
+  let filtered = allPosts
+  if (searchTerm) {
+    filtered = filtered.filter(p => p.title.toLowerCase().includes(searchTerm))
+  }
+  if (category) {
+    filtered = filtered.filter(p => p.category === category)
+  }
+  
+  if (filtered.length === 0) {
+    noResultsEl.classList.remove('hidden')
+    dealsGrid.innerHTML = ''
+  } else {
+    noResultsEl.classList.add('hidden')
+    renderPosts(filtered)
+  }
+}
 
-categorySelect.addEventListener('change', () => {
-  currentFilter.category = categorySelect.value
-  loadApprovedPosts()
-})
+searchInput.addEventListener('input', filterPosts)
+categorySelect.addEventListener('change', filterPosts)
 
-loadApprovedPosts()
+loadPosts()
