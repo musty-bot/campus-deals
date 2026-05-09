@@ -15,6 +15,7 @@ export async function checkMaintenanceMode() {
     
     // If maintenance mode is enabled AND the current page is not an admin page
     if (data?.value === true && !window.location.pathname.includes('/admin')) {
+      console.log('Maintenance mode is ON, redirecting to maintenance page...');
       window.location.href = '/maintenance.html';
       return true;
     }
@@ -27,8 +28,6 @@ export async function checkMaintenanceMode() {
 
 // Auto-check on page load for non-admin pages
 if (!window.location.pathname.includes('/admin')) {
-  // Small delay to ensure everything loads
-  setTimeout(() => {
-    checkMaintenanceMode();
-  }, 100);
+  // Check immediately when page loads
+  checkMaintenanceMode();
 }
