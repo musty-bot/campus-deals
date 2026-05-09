@@ -34,6 +34,7 @@ if (window.location.pathname.includes('dashboard')) {
   loadDashboardStats()
   loadMaintenanceStatus()
   loadAnnouncement()
+  loadVisitStats()
   
   if (toggle) toggle.addEventListener('change', (e) => saveMaintenance(e.target.checked))
   if (saveAnnouncement) saveAnnouncement.addEventListener('click', saveAnnouncementText)
@@ -50,6 +51,17 @@ async function loadDashboardStats() {
   const activeEl = document.getElementById('active-listings')
   if (pendingEl) pendingEl.textContent = pending ?? 0
   if (activeEl) activeEl.textContent = approved ?? 0
+}
+async function loadVisitStats() {
+  const today = new Date().toISOString().split('T')[0]
+  
+  const { count: viewsToday } = await supabase
+    .from('page_views')
+    .select('*', { count: 'exact', head: true })
+    .gte('viewed_at', today)
+  
+  const viewsEl = document.getElementById('views-today')
+  if (viewsEl) viewsEl.textContent = viewsToday ?? 0
 }
 
 async function loadMaintenanceStatus() {
