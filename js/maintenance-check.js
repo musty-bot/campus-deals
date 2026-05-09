@@ -1,33 +1,21 @@
-import { supabase } from './config.js';
+import { supabase } from './config.js'
 
 export async function checkMaintenanceMode() {
-  try {
-    const { data, error } = await supabase
-      .from('settings')
-      .select('value')
-      .eq('key', 'maintenance_mode')
-      .single();
-    
-    if (error) {
-      console.warn('Could not check maintenance mode:', error);
-      return false;
-    }
-    
-    // If maintenance mode is enabled AND the current page is not an admin page
-    if (data?.value === true && !window.location.pathname.includes('/admin')) {
-      console.log('Maintenance mode is ON, redirecting to maintenance page...');
-      window.location.href = '/maintenance.html';
-      return true;
-    }
-    return false;
-  } catch (err) {
-    console.warn('Maintenance check error:', err);
-    return false;
+  const { data, error } = await supabase
+    .from('settings')
+    .select('value')
+    .eq('key', 'maintenance_mode')
+    .single()
+  
+  if (error) return false
+  
+  if (data?.value === true && !window.location.pathname.includes('/admin')) {
+    window.location.href = '/maintenance.html'
+    return true
   }
+  return false
 }
 
-// Auto-check on page load for non-admin pages
 if (!window.location.pathname.includes('/admin')) {
-  // Check immediately when page loads
-  checkMaintenanceMode();
+  checkMaintenanceMode()
 }

@@ -428,3 +428,93 @@ function escapeHtml(unsafe) {
     if (m === "'") return '&#039;';
   });
 }
+// ========== MAINTENANCE MODE ==========
+async function loadMaintenanceStatus() {
+  const toggle = document.getElementById('maintenance-toggle')
+  if (!toggle) return
+  
+  const { data, error } = await supabase
+    .from('settings')
+    .select('value')
+    .eq('key', 'maintenance_mode')
+    .single()
+  
+  if (!error && data) {
+    toggle.checked = data.value
+    const statusText = document.getElementById('maintenance-status-text')
+    if (statusText) {
+      statusText.textContent = data.value ? '🔧 Enabled' : '✅ Live'
+    }
+  }
+}
+
+async function toggleMaintenanceMode(checked) {
+  const { error } = await supabase
+    .from('settings')
+    .update({ value: checked })
+    .eq('key', 'maintenance_mode')
+  
+  if (error) {
+    alert('Failed: ' + error.message)
+    return false
+  }
+  return true
+}
+
+// Add event listener
+if (document.getElementById('maintenance-toggle')) {
+  document.getElementById('maintenance-toggle').addEventListener('change', async (e) => {
+    await toggleMaintenanceMode(e.target.checked)
+    alert(e.target.checked ? 'Maintenance mode ON' : 'Maintenance mode OFF')
+  })
+  loadMaintenanceStatus()
+}
+
+// ========== ANNOUNCEMENT ==========
+async function loadAnnouncementText() {
+  const textarea = document.getElementById('announcement-text')
+  if (!textarea) return
+  
+  const { data, error } = await supabase
+    .from('settings')
+    .select('value_text')
+    .eq('key', 'announcement_text')
+    .single()
+  
+  if (!error && data && data.value_text) {
+    textarea.value = data.value_text
+  }
+}
+
+async function saveAnnouncementText() {
+  const textarea = document.getElementById('announcement-text')
+  const statusSpan = document.getElementById('announcement-status')
+  
+  if (!textarea) return
+  
+  const newText = textarea.value
+  
+  if (!newText) {
+    statusSpan.textContent = '❌ Enter a message'
+    return
+  }
+  
+  statusSpan.textContent = 'Saving...'
+  
+  const { error } = await supabase
+    .from('settings')
+    .update({ value_text: newText })
+    .eq('key', 'announcement_text')
+  
+  if (error) {
+    statusSpan.textContent = '❌ Failed'
+  } else {
+    statusSpan.textContent = '✅ Saved!'
+    setTimeout(() => statusSpan.textContent = '', 2000)
+  }
+}
+
+if (document.getElementById('save-announcement-btn')) {
+  document.getElementById('save-announcement-btn').addEventListener('click', saveAnnouncementText)
+  loadAnnouncementText()
+}
