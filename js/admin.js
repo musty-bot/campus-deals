@@ -18,10 +18,7 @@ if (loginForm) {
     const password = document.getElementById('password').value
     const errorEl = document.getElementById('login-error')
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
 
     if (error) {
       errorEl.textContent = error.message
@@ -36,6 +33,25 @@ if (window.location.pathname.endsWith('dashboard.html')) {
   loadDashboard()
   loadMaintenanceStatus()
   loadAnnouncementText()
+  
+  const toggle = document.getElementById('maintenance-toggle')
+  if (toggle) {
+    toggle.addEventListener('change', async (e) => {
+      const success = await saveMaintenanceMode(e.target.checked)
+      if (success) {
+        const statusText = document.getElementById('maintenance-status-text')
+        if (statusText) statusText.textContent = e.target.checked ? '🔧 Enabled' : '✅ Live'
+        alert(e.target.checked ? 'Maintenance mode ON' : 'Maintenance mode OFF')
+      } else {
+        e.target.checked = !e.target.checked
+      }
+    })
+  }
+  
+  const saveBtn = document.getElementById('save-announcement-btn')
+  if (saveBtn) {
+    saveBtn.addEventListener('click', saveAnnouncementText)
+  }
 }
 
 async function loadDashboard() {
@@ -55,15 +71,11 @@ async function loadDashboard() {
     .select('*', { count: 'exact', head: true })
     .eq('status', 'approved')
 
-  const viewsToday = document.getElementById('views-today')
-  const activeListings = document.getElementById('active-listings')
-  const pendingCount = document.getElementById('pending-count')
-  const clicksToday = document.getElementById('clicks-today')
+  const pendingEl = document.getElementById('pending-count')
+  const activeEl = document.getElementById('active-listings')
   
-  if (viewsToday) viewsToday.textContent = '0'
-  if (activeListings) activeListings.textContent = approved ?? 0
-  if (pendingCount) pendingCount.textContent = pending ?? 0
-  if (clicksToday) clicksToday.textContent = '0'
+  if (pendingEl) pendingEl.textContent = pending ?? 0
+  if (activeEl) activeEl.textContent = approved ?? 0
 }
 
 // ========== MAINTENANCE MODE ==========
@@ -72,22 +84,15 @@ async function loadMaintenanceStatus() {
   const statusText = document.getElementById('maintenance-status-text')
   if (!toggle) return
   
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from('settings')
     .select('value')
     .eq('key', 'maintenance_mode')
     .single()
   
-  if (error) {
-    console.error('Maintenance load error:', error)
-    return
-  }
-  
   if (data) {
     toggle.checked = data.value
-    if (statusText) {
-      statusText.textContent = data.value ? '🔧 Enabled' : '✅ Live'
-    }
+    if (statusText) statusText.textContent = data.value ? '🔧 Enabled' : '✅ Live'
   }
 }
 
@@ -98,7 +103,6 @@ async function saveMaintenanceMode(checked) {
     .eq('key', 'maintenance_mode')
   
   if (error) {
-    console.error('Save error:', error)
     alert('Failed: ' + error.message)
     return false
   }
@@ -110,16 +114,11 @@ async function loadAnnouncementText() {
   const textarea = document.getElementById('announcement-text')
   if (!textarea) return
   
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from('settings')
     .select('value_text')
     .eq('key', 'announcement_text')
     .single()
-  
-  if (error) {
-    console.error('Announcement load error:', error)
-    return
-  }
   
   if (data && data.value_text) {
     textarea.value = data.value_text
@@ -148,7 +147,6 @@ async function saveAnnouncementText() {
   
   if (error) {
     if (statusSpan) statusSpan.textContent = '❌ Failed'
-    console.error('Save error:', error)
   } else {
     if (statusSpan) statusSpan.textContent = '✅ Saved!'
     setTimeout(() => {
@@ -157,35 +155,7 @@ async function saveAnnouncementText() {
   }
 }
 
-// ========== ADD EVENT LISTENERS FOR DASHBOARD ==========
-if (window.location.pathname.endsWith('dashboard.html')) {
-  const toggle = document.getElementById('maintenance-toggle')
-  if (toggle) {
-    toggle.addEventListener('change', async (e) => {
-      const success = await saveMaintenanceMode(e.target.checked)
-      if (success) {
-        const statusText = document.getElementById('maintenance-status-text')
-        if (statusText) {
-          statusText.textContent = e.target.checked ? '🔧 Enabled' : '✅ Live'
-        }
-        alert(e.target.checked ? 'Maintenance mode ON' : 'Maintenance mode OFF')
-      } else {
-        e.target.checked = !e.target.checked
-      }
-    })
-  }
-  
-  const saveBtn = document.getElementById('save-announcement-btn')
-  if (saveBtn) {
-    saveBtn.addEventListener('click', saveAnnouncementText)
-  }
-}
-
 // ========== PENDING APPROVALS ==========
-if (window.location.pathname.endsWith('pending.html')) {
-  loadPending()
-}
-
 async function loadPending() {
   const { data: { session } } = await supabase.auth.getSession()
   if (!session) {
@@ -252,10 +222,6 @@ window.rejectPost = async (id) => {
 }
 
 // ========== MANAGE POSTS ==========
-if (window.location.pathname.endsWith('manage.html')) {
-  loadManage()
-}
-
 async function loadManage() {
   const { data: { session } } = await supabase.auth.getSession()
   if (!session) {
@@ -319,7 +285,15 @@ window.editPost = async (id) => {
   else location.reload()
 }
 
-// ========== HELPER ==========
+// ========== PAGE DETECTION - THIS IS WHAT WAS MISSING ==========
+if (window.location.pathname.endsWith('pending.html')) {
+  loadPending()
+}
+
+if (window.location.pathname.endsWith('manage.html')) {
+  loadManage()
+}
+
 function escapeHtml(unsafe) {
   if (!unsafe) return ''
   return unsafe.replace(/[&<>]/g, function(m) {
